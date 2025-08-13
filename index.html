@@ -1,0 +1,29 @@
+<!--
+README
+- 환경 셋업: 필요 시 TypeScript 컴파일 `tsc` (전역 설치됨)
+- 실행: `index.html`을 브라우저로 열기
+- 관리자 패스코드 변경: `src/App.tsx`의 `passcode === 'admin1234'` 부분 수정
+- 데이터 저장소 스위칭: `getStoredEmails`/`saveEmails` 함수 부분을 서버 연동 등으로 교체
+-->
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 영어 튜터</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18",
+          "react-dom/client": "https://esm.sh/react-dom@18/client",
+          "react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime"
+        }
+      }
+    </script>
+  </head>
+  <body class="min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="./dist/main.js"></script>
+  </body>
+</html>
