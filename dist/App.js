@@ -1,11 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useState, useEffect } from 'react';
-import { Input } from './components/ui/input';
-import { Button } from './components/ui/button';
-import { Checkbox } from './components/ui/checkbox';
-import { Label } from './components/ui/label';
-import { Dialog } from './components/ui/dialog';
-import { Toast } from './components/ui/toast';
+
 function getStoredEmails() {
     try {
         const raw = localStorage.getItem('waitlist.emails');

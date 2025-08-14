@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input } from './components/ui/input';
-import { Button } from './components/ui/button';
-import { Checkbox } from './components/ui/checkbox';
-import { Label } from './components/ui/label';
-import { Dialog } from './components/ui/dialog';
-import { Toast } from './components/ui/toast';
+
 
 interface WaitlistEntry {
   email: string;

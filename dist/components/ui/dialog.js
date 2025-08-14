@@ -1,4 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+
 export function Dialog({ open, onClose, children }) {
     if (!open)
         return null;
