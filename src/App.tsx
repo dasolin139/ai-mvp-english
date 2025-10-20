@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
+import { Button } from './components/ui/button';
+import { Input } from './components/ui/input';
+import { Checkbox } from './components/ui/checkbox';
+import { Label } from './components/ui/label';
+import { Dialog } from './components/ui/dialog';
+import { Toast } from './components/ui/toast';
 
 interface WaitlistEntry {
   email: string;
@@ -41,31 +46,31 @@ function AdminDashboard({ emails, setEmails, onClose }: { emails: WaitlistEntry[
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'waitlist.csv';
+    a.download = 'digital-marketing-waitlist.csv';
     a.click();
     URL.revokeObjectURL(url);
   };
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      <h2 className="text-2xl font-bold mb-4">수집 이메일 목록</h2>
+      <h2 className="text-2xl font-bold mb-4">Email Waitlist</h2>
       <div className="flex items-center gap-2 mb-4">
         <Input
-          placeholder="검색"
+          placeholder="Search"
           value={query}
           onChange={e => setQuery(e.target.value)}
           className="max-w-xs"
         />
-        <Button onClick={exportCSV}>CSV 내보내기</Button>
-        <Button onClick={deleteAll} className="bg-red-600 hover:bg-red-700">전체 삭제</Button>
-        <Button onClick={onClose} className="ml-auto">닫기</Button>
+        <Button onClick={exportCSV}>Export CSV</Button>
+        <Button onClick={deleteAll} className="bg-red-600 hover:bg-red-700">Delete All</Button>
+        <Button onClick={onClose} className="ml-auto">Close</Button>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b">
-              <th className="p-2 text-left">이메일</th>
-              <th className="p-2 text-left">제출 시각</th>
+              <th className="p-2 text-left">Email</th>
+              <th className="p-2 text-left">Submitted At</th>
               <th className="p-2"></th>
             </tr>
           </thead>
@@ -79,14 +84,14 @@ function AdminDashboard({ emails, setEmails, onClose }: { emails: WaitlistEntry[
                     onClick={() => deleteOne(item.email)}
                     className="bg-red-600 hover:bg-red-700"
                   >
-                    삭제
+                    Delete
                   </Button>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={3} className="p-4 text-center text-gray-500">데이터가 없습니다.</td>
+                <td colSpan={3} className="p-4 text-center text-gray-500">No data available.</td>
               </tr>
             )}
           </tbody>
@@ -116,15 +121,15 @@ export default function App() {
     if (loading) return;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setToast({ message: '유효한 이메일을 입력하세요.', type: 'error' });
+      setToast({ message: 'Please enter a valid email address.', type: 'error' });
       return;
     }
     if (!consent) {
-      setToast({ message: '개인정보 수집에 동의해야 합니다.', type: 'error' });
+      setToast({ message: 'You must agree to receive course updates.', type: 'error' });
       return;
     }
     if (emails.some(e => e.email === email)) {
-      setToast({ message: '이미 제출된 이메일입니다.', type: 'error' });
+      setToast({ message: 'This email is already registered.', type: 'error' });
       return;
     }
     setLoading(true);
@@ -135,7 +140,7 @@ export default function App() {
     setEmail('');
     setConsent(false);
     setLoading(false);
-    setToast({ message: '제출되었습니다!', type: 'success' });
+    setToast({ message: 'Successfully registered! We\'ll be in touch soon.', type: 'success' });
   };
 
   const openAdmin = (e: any) => {
@@ -145,7 +150,7 @@ export default function App() {
       setPasscodeOpen(false);
       setPasscode('');
     } else {
-      setToast({ message: '패스코드가 올바르지 않습니다.', type: 'error' });
+      setToast({ message: 'Incorrect passcode.', type: 'error' });
     }
   };
 
@@ -156,12 +161,12 @@ export default function App() {
         className="fixed top-4 right-4 z-40 text-sm underline"
         onClick={() => setPasscodeOpen(true)}
       >
-        관리자 모드
+        Admin
       </button>
       <Dialog open={passcodeOpen} onClose={() => setPasscodeOpen(false)}>
         <form onSubmit={openAdmin} className="space-y-4">
           <div>
-            <Label htmlFor="pass">패스코드</Label>
+            <Label htmlFor="pass">Passcode</Label>
             <Input
               id="pass"
               type="password"
@@ -169,109 +174,241 @@ export default function App() {
               onChange={e => setPasscode(e.target.value)}
             />
           </div>
-          <Button type="submit" className="w-full">입장</Button>
+          <Button type="submit" className="w-full">Enter</Button>
         </form>
       </Dialog>
       {isAdmin ? (
         <AdminDashboard emails={emails} setEmails={setEmails} onClose={() => setIsAdmin(false)} />
       ) : (
         <main>
-          <section className="min-h-screen flex flex-col items-center justify-center text-center px-4">
-            <h1 className="text-4xl font-bold mb-4">AI 튜터로 면접 영어를 빠르게 준비하세요</h1>
-            <p className="mb-6 text-lg">취업 준비 대학생을 위한 AI 영어 학습 서비스</p>
-            <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
-              <Input
-                type="email"
-                placeholder="이메일 주소"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                aria-label="이메일 주소"
-                required
-              />
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="consent"
-                  checked={consent}
-                  onChange={e => setConsent(e.target.checked)}
-                  aria-describedby="consent-desc"
+          {/* Hero Section */}
+          <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 bg-gradient-to-br from-blue-50 to-white">
+            <div className="max-w-4xl">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
+                Master Digital Marketing in Nigeria
+              </h1>
+              <p className="mb-8 text-xl md:text-2xl text-gray-700">
+                Learn in-demand skills. Grow your business. Build your career.
+              </p>
+              <p className="mb-10 text-lg text-gray-600 max-w-2xl mx-auto">
+                Join thousands of Nigerians transforming their careers with practical digital marketing education designed for the African market.
+              </p>
+              <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto space-y-4">
+                <Input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  aria-label="Email address"
+                  required
                 />
-                <Label htmlFor="consent" id="consent-desc">
-                  (필수) 이메일 수집에 동의합니다
-                </Label>
-              </div>
-              <Button type="submit" disabled={loading} className="w-full">
-                {loading ? '처리중...' : '대기 명단 신청'}
-              </Button>
-            </form>
+                <div className="flex items-center space-x-2 text-left">
+                  <Checkbox
+                    id="consent"
+                    checked={consent}
+                    onChange={e => setConsent(e.target.checked)}
+                    aria-describedby="consent-desc"
+                  />
+                  <Label htmlFor="consent" id="consent-desc" className="text-sm">
+                    I agree to receive course updates and marketing communications
+                  </Label>
+                </div>
+                <Button type="submit" disabled={loading} className="w-full text-lg py-6">
+                  {loading ? 'Processing...' : 'Join the Waitlist'}
+                </Button>
+              </form>
+            </div>
           </section>
-          <section className="py-16 bg-gray-50">
-            <div className="max-w-4xl mx-auto px-4 text-center">
-              <h2 className="text-2xl font-bold mb-8">문제 / 해결 / 가치 제안</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* Why Digital Marketing Section */}
+          <section className="py-20 bg-white">
+            <div className="max-w-6xl mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Why Digital Marketing in Nigeria?</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {[
-                  { title: '시간 부족', desc: '빠르게 준비해야 하지만 자료가 부족합니다.' },
-                  { title: '맞춤 피드백', desc: 'AI가 개인 맞춤 피드백을 제공합니다.' },
-                  { title: '언제 어디서나', desc: '모바일로도 학습이 가능합니다.' }
+                  {
+                    title: 'Growing Digital Economy',
+                    desc: 'Nigeria has over 150 million internet users. Businesses need digital marketers to reach these customers online.',
+                    icon: '📈'
+                  },
+                  {
+                    title: 'High Earning Potential',
+                    desc: 'Digital marketers in Nigeria earn ₦150,000 - ₦500,000+ monthly. Freelancers can earn even more working globally.',
+                    icon: '💰'
+                  },
+                  {
+                    title: 'Work from Anywhere',
+                    desc: 'Digital marketing skills allow you to work remotely, start your own agency, or help local businesses grow.',
+                    icon: '🌍'
+                  }
                 ].map(card => (
-                  <div key={card.title} className="p-4 border rounded-md bg-white">
-                    <h3 className="font-semibold mb-2">{card.title}</h3>
-                    <p className="text-sm text-gray-600">{card.desc}</p>
+                  <div key={card.title} className="p-6 border-2 rounded-lg bg-white hover:shadow-lg transition-shadow">
+                    <div className="text-4xl mb-4">{card.icon}</div>
+                    <h3 className="font-bold text-xl mb-3">{card.title}</h3>
+                    <p className="text-gray-600">{card.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
           </section>
-          <section className="py-16">
-            <div className="max-w-3xl mx-auto px-4 text-center">
-              <h2 className="text-2xl font-bold mb-8">작동 방식</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+          {/* Courses Section */}
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-6xl mx-auto px-4">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">What You'll Learn</h2>
+              <p className="text-center text-gray-600 mb-12 text-lg">Comprehensive courses designed for the Nigerian market</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                  { step: '1', desc: 'AI에게 목표를 알려주세요.' },
-                  { step: '2', desc: '맞춤 커리큘럼을 받으세요.' },
-                  { step: '3', desc: '실전 연습으로 준비를 마무리하세요.' }
+                  {
+                    title: 'Social Media Marketing',
+                    desc: 'Master Instagram, Facebook, Twitter, and TikTok marketing. Build engaged audiences and drive sales.',
+                    skills: ['Content Strategy', 'Paid Ads', 'Community Management']
+                  },
+                  {
+                    title: 'SEO & Content Marketing',
+                    desc: 'Rank on Google Nigeria. Create content that attracts customers and builds authority.',
+                    skills: ['Keyword Research', 'On-page SEO', 'Content Writing']
+                  },
+                  {
+                    title: 'Email Marketing',
+                    desc: 'Build email lists, create campaigns, and convert subscribers into customers.',
+                    skills: ['Email Copywriting', 'Automation', 'List Building']
+                  },
+                  {
+                    title: 'Digital Advertising',
+                    desc: 'Run profitable ad campaigns on Google, Facebook, and Instagram for Nigerian businesses.',
+                    skills: ['Google Ads', 'Facebook Ads', 'Campaign Analytics']
+                  }
+                ].map(course => (
+                  <div key={course.title} className="p-6 border rounded-lg bg-white">
+                    <h3 className="font-bold text-lg mb-3">{course.title}</h3>
+                    <p className="text-sm text-gray-600 mb-4">{course.desc}</p>
+                    <div className="space-y-2">
+                      {course.skills.map(skill => (
+                        <div key={skill} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded inline-block mr-2">
+                          {skill}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* How It Works Section */}
+          <section className="py-20 bg-white">
+            <div className="max-w-4xl mx-auto px-4 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-12">How It Works</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  { step: '1', title: 'Enroll', desc: 'Join our waitlist and get early access to courses at discounted rates.' },
+                  { step: '2', title: 'Learn', desc: 'Study at your own pace with video lessons, practical assignments, and real projects.' },
+                  { step: '3', title: 'Earn', desc: 'Get certified, build your portfolio, and start earning with your new digital marketing skills.' }
                 ].map(s => (
-                  <div key={s.step} className="p-4 border rounded-md">
-                    <div className="text-3xl font-bold mb-2">{s.step}</div>
-                    <p className="text-sm text-gray-600">{s.desc}</p>
+                  <div key={s.step} className="p-6">
+                    <div className="w-16 h-16 bg-blue-600 text-white text-3xl font-bold rounded-full flex items-center justify-center mx-auto mb-4">
+                      {s.step}
+                    </div>
+                    <h3 className="font-bold text-xl mb-2">{s.title}</h3>
+                    <p className="text-gray-600">{s.desc}</p>
                   </div>
                 ))}
               </div>
             </div>
           </section>
-          <section className="py-16 bg-gray-50">
-            <div className="max-w-3xl mx-auto px-4 text-center">
-              <h2 className="text-2xl font-bold mb-8">사용자 후기</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="p-4 border rounded-md bg-white text-sm text-gray-600">
-                    "더미 후기가 들어갈 자리"
+
+          {/* Success Stories Section */}
+          <section className="py-20 bg-gray-50">
+            <div className="max-w-6xl mx-auto px-4 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-12">Success Stories</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {[
+                  {
+                    name: 'Chioma O.',
+                    location: 'Lagos',
+                    quote: 'After completing the course, I started my own social media agency. Now I manage 15+ clients and earn over ₦400,000 monthly.',
+                    role: 'Social Media Manager'
+                  },
+                  {
+                    name: 'Ibrahim K.',
+                    location: 'Abuja',
+                    quote: 'The SEO skills I learned helped me grow my e-commerce store from 0 to 10,000 visitors per month. Sales have tripled!',
+                    role: 'E-commerce Entrepreneur'
+                  },
+                  {
+                    name: 'Grace A.',
+                    location: 'Port Harcourt',
+                    quote: 'I landed a digital marketing job at a top tech company in Lagos just 2 months after completing the program.',
+                    role: 'Digital Marketing Specialist'
+                  }
+                ].map(testimonial => (
+                  <div key={testimonial.name} className="p-6 border rounded-lg bg-white text-left">
+                    <p className="text-gray-700 mb-4 italic">"{testimonial.quote}"</p>
+                    <div className="border-t pt-4">
+                      <p className="font-bold">{testimonial.name}</p>
+                      <p className="text-sm text-gray-600">{testimonial.role}</p>
+                      <p className="text-xs text-gray-500">{testimonial.location}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </section>
-          <section className="py-16">
+
+          {/* FAQ Section */}
+          <section className="py-20 bg-white">
             <div className="max-w-3xl mx-auto px-4">
-              <h2 className="text-2xl font-bold mb-8 text-center">FAQ</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">Frequently Asked Questions</h2>
               <div className="space-y-4">
                 {[
-                  { q: '어떻게 이용하나요?', a: '이메일 등록 후 안내를 받아보세요.' },
-                  { q: '비용은 얼마인가요?', a: '정식 출시 전에 공지됩니다.' },
-                  { q: '데이터는 안전한가요?', a: '로컬에만 저장되며 언제든 삭제할 수 있습니다.' },
-                  { q: '모바일도 지원하나요?', a: '네, 모바일 최적화가 되어 있습니다.' },
-                  { q: '언제 출시되나요?', a: '곧 출시 예정입니다.' }
+                  {
+                    q: 'Do I need any prior experience?',
+                    a: 'No prior experience required! Our courses are designed for beginners and include everything you need to start from scratch.'
+                  },
+                  {
+                    q: 'How much do the courses cost?',
+                    a: 'Pricing will be announced soon. Waitlist members will receive exclusive early-bird discounts of up to 50% off.'
+                  },
+                  {
+                    q: 'Can I learn while working full-time?',
+                    a: 'Absolutely! All courses are self-paced and include lifetime access. Study whenever it fits your schedule.'
+                  },
+                  {
+                    q: 'Will I get a certificate?',
+                    a: 'Yes! You\'ll receive an industry-recognized certificate upon completion that you can share on LinkedIn and with employers.'
+                  },
+                  {
+                    q: 'Do you offer payment plans?',
+                    a: 'Yes, we offer flexible payment plans to make education accessible to all Nigerians. Pay in installments interest-free.'
+                  },
+                  {
+                    q: 'Is the content relevant for Nigeria?',
+                    a: 'Yes! All examples, case studies, and projects are based on Nigerian businesses and the African market context.'
+                  }
                 ].map(item => (
-                  <div key={item.q} className="border rounded-md p-4 bg-white">
-                    <p className="font-semibold">{item.q}</p>
-                    <p className="text-sm text-gray-600 mt-2">{item.a}</p>
+                  <div key={item.q} className="border rounded-lg p-6 bg-gray-50">
+                    <p className="font-bold text-lg mb-2">{item.q}</p>
+                    <p className="text-gray-700">{item.a}</p>
                   </div>
                 ))}
               </div>
             </div>
           </section>
-          <footer className="py-8 bg-gray-100 text-center text-sm text-gray-600">
-            <p className="mb-2">개인정보는 데모용으로 로컬에만 저장됩니다.</p>
-            <p>문의: support@example.com</p>
+
+          {/* Footer */}
+          <footer className="py-12 bg-gray-900 text-white">
+            <div className="max-w-6xl mx-auto px-4">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold mb-2">Digital Marketing Academy Nigeria</h3>
+                <p className="text-gray-400">Empowering Nigerians with digital skills</p>
+              </div>
+              <div className="border-t border-gray-700 pt-8 text-center text-sm text-gray-400">
+                <p className="mb-2">Your email is stored locally for demo purposes only.</p>
+                <p>Contact: hello@digitalmarketingng.com</p>
+                <p className="mt-4">© 2025 Digital Marketing Academy Nigeria. All rights reserved.</p>
+              </div>
+            </div>
           </footer>
         </main>
       )}
