@@ -1,22 +1,25 @@
 <!--
 README
-- 환경 셋업: 필요 시 TypeScript 컴파일 `tsc` (전역 설치됨)
-- 실행: `index.html`을 브라우저로 열기
-- 관리자 패스코드 변경: `src/App.tsx`의 `passcode === 'admin1234'` 부분 수정
-- 데이터 저장소 스위칭: `getStoredEmails`/`saveEmails` 함수 부분을 서버 연동 등으로 교체
+- Setup: Compile TypeScript with `tsc` (globally installed)
+- Run: Open `index.html` in browser
+- Change admin passcode: Edit `passcode === 'admin1234'` in `src/App.tsx`
+- Switch data storage: Replace `getStoredEmails`/`saveEmails` functions with server integration
 -->
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI 영어 튜터</title>
+    <meta name="description" content="Master digital marketing skills in Nigeria. Learn SEO, social media marketing, email marketing, and digital advertising with courses designed for the African market." />
+    <meta name="keywords" content="digital marketing Nigeria, online marketing courses, SEO Nigeria, social media marketing, digital skills Africa" />
+    <title>Digital Marketing Academy Nigeria - Master Digital Marketing Skills</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="importmap">
       {
         "imports": {
           "react": "https://esm.sh/react@18",
-
+          "react-dom/client": "https://esm.sh/react-dom@18/client",
+          "react/jsx-runtime": "https://esm.sh/react@18/jsx-runtime"
         }
       }
     </script>
